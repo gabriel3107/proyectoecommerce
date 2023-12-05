@@ -1,0 +1,20 @@
+[
+	{
+		"title": "Pollo",
+		"description": "Fresco",
+		"price": "15",
+		"thumbnail": "./files/img.jpg",
+		"code": "prod-0001",
+		"stock": "10",
+		"id": 1
+	},
+	{
+		"title": "Pollo",
+		"description": "Fresco",
+		"price": "15",
+		"thumbnail": "./files/img.jpg",
+		"code": "prod-0001",
+		"stock": "10",
+		"id": 2
+	}
+]
