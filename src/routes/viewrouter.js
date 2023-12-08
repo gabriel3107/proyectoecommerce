@@ -64,18 +64,46 @@ router.get("/products",async (req,res)=>{
         });}
         catch(error) {return res.send({ status: 'error', error: error })}
     });
-    router.get("/",async (req,res)=>{
+
+    router.get("/home",privateAccess,async (req,res)=>{
         try{
             const {page=1,limit=10,sort} = req.query;
-            
+            //si no manda nada, asumo page 1 y limit 10.
+    //        const {docs,hasPrevPage,hasNextPage,nextPage,prevPage}=await productsModel.paginate({},{sort:{price:1},page,limit,lean:true})
             const {docs,hasPrevPage,hasNextPage,nextPage,prevPage,totalPages}=await productsModel.paginate({},{sort:{price:sort},page,limit,lean:true});
-           
+            //flags para saber si botón hacia adelante o hacia atrás. 
+            //primer parámetro de paginate filtro de búsqueda; segundo parámetro parámetros de paginación. Limit fijado en 5, page viene del query. Lean por el POJO.
+            //const products = await productManager.getAll();
             const prevLink = hasPrevPage ? `/?page=${prevPage}&limit=${limit}` : null;
             const nextLink= hasNextPage ? `/?page=${nextPage}&limit=${limit}` : null;
             res.send({status:"success",payload:docs,hasPrevPage,hasNextPage,nextPage,prevPage,totalPages,page,prevLink,nextLink
             });}
             catch(error) {return res.send({ status: 'error', error: error })}
         });
+
+//RUTA DE CARRITO
+router.get("/carts/:cid",async(req,res)=>{
+        try{
+            const cid = req.params.cid;
+            const cart = await cartManager.getCartById(cid);
+            res.render("cart",{cart});
+        }
+        catch(error){
+            console.error(error.message);
+        }
+    });
+    // router.get("/",async (req,res)=>{
+    //     try{
+    //         const {page=1,limit=10,sort} = req.query;
+            
+    //         const {docs,hasPrevPage,hasNextPage,nextPage,prevPage,totalPages}=await productsModel.paginate({},{sort:{price:sort},page,limit,lean:true});
+           
+    //         const prevLink = hasPrevPage ? `/?page=${prevPage}&limit=${limit}` : null;
+    //         const nextLink= hasNextPage ? `/?page=${nextPage}&limit=${limit}` : null;
+    //         res.send({status:"success",payload:docs,hasPrevPage,hasNextPage,nextPage,prevPage,totalPages,page,prevLink,nextLink
+    //         });}
+    //         catch(error) {return res.send({ status: 'error', error: error })}
+    //     });
 
 router.get("/chat",async(req,res)=>{
     const messages = await chatManager.getAll();

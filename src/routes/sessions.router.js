@@ -4,35 +4,35 @@ import passport from 'passport';
 
 const router = Router();
 
-router.post('/register', async (req, res) => {
-    try {
-        const { first_name:firstName, last_name:lastName, email, age, password } = req.body;
+// router.post('/register', async (req, res) => {
+//     try {
+//         const { first_name:firstName, last_name:lastName, email, age, password } = req.body;
 
-        if (!firstName|| !lastName || !email || !age || !password) {
-            return res.status(422).send({ status: 'error', message: 'incomplete values' });
-        }
+//         if (!firstName|| !lastName || !email || !age || !password) {
+//             return res.status(422).send({ status: 'error', message: 'incomplete values' });
+//         }
 
-        const exists = await usersModel.findOne({ email });
+//         const exists = await usersModel.findOne({ email });
 
-        if (exists) {
-            return res.status(400).send({ status: 'error', message: 'user already exists' });
-        }
+//         if (exists) {
+//             return res.status(400).send({ status: 'error', message: 'user already exists' });
+//         }
        
 
-        await usersModel.create({
-            first_name: firstName,
-            last_name: lastName,
-            email,
-            age,
-            password
+//         await usersModel.create({
+//             first_name: firstName,
+//             last_name: lastName,
+//             email,
+//             age,
+//             password
       
-        })
+//         })
 
-        res.status(201).send({ status: 'success', message: 'user registered' });
-    } catch (error) {
-        res.status(500).send({ status: 'error', message: error.message })
-    }
-});
+//         res.status(201).send({ status: 'success', message: 'user registered' });
+//     } catch (error) {
+//         res.status(500).send({ status: 'error', message: error.message })
+//     }
+// });
 
 router.get('/fail-register', async (req, res) => {
     res.status(500).send({ status: 'error', message: 'register fail' });

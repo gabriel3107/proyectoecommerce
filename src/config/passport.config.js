@@ -3,7 +3,9 @@ import local from 'passport-local';
 import usersModel from '../dao/dbManager/models/users.model.js';
 import { createHash, isValidPassword } from '../utils.js';
 import GitHubStrategy from 'passport-github2';
+import CartManager from "../dao/dbManager/carts.manager.js";
 
+const cartManager = new CartManager(cartPath);
 const LocalStrategy = local.Strategy;
 
 const initializePassport = () => {
@@ -14,7 +16,8 @@ const initializePassport = () => {
         scope: ['user:email'] 
     }, async (accessToken, refreshToken, profile, done) => { 
         try {
-          
+
+            const carrito = await cartManager.save();
             const email = profile.emails[0].value; 
             const user = await usersModel.findOne({ email });
 
@@ -25,7 +28,9 @@ const initializePassport = () => {
                     last_name: ' ', 
                     age: 5000, 
                     email,
-                    password: ' ' 
+                    password: ' ',
+                    cart: carrito._id,
+                    
                 }
 
                 const result = await usersModel.create(newUser);
@@ -45,7 +50,7 @@ passport.use('register', new LocalStrategy({
         usernameField: 'email' 
     }, async (req, username, password, done) => {
         try {
-            const { first_name, last_name, age } = req.body; 
+            const { first_name, last_name, age, cart} = req.body; 
             if (!first_name|| !last_name || !username || !age || !password) {
                 return done(null,false);
             }
@@ -59,7 +64,9 @@ passport.use('register', new LocalStrategy({
                 last_name,
                 email: username,
                 age,
-                password: createHash(password)
+                password: createHash(password),
+                cart,
+                role: username==="adminCoder@coder.com"? ("admin") : ("user")
             }
 
             const result = await usersModel.create(userToSave);

@@ -7,8 +7,8 @@ console.log ("Working with products from DB");
 
 getAll = async ()=>{
 const products = await productsModel.find();
-
-return products.map(product=> product.toObject());
+return products;
+//return products.map(product=> product.toObject());
 }
 
 getProductById = async (id) => {
@@ -27,9 +27,18 @@ delete = async (pid) =>{
     return result;
 }
 
+// save = async (product) => {
+//     const result = await productsModel.create(product);
+//     return result;
+//     }
+    
+// };
+//
+
 save = async (product) => {
-    const result = await productsModel.create(product);
+    const productAlreadyExists= await productsModel.findOne({code:product.code})
+    const result = !productAlreadyExists && await productsModel.create(product);
     return result;
     }
-    
+
 };

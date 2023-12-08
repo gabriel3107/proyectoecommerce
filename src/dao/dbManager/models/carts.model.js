@@ -18,4 +18,8 @@ const cartsSchema = new mongoose.Schema({
       },
     });
 
+    cartsSchema.pre(["find","findOne"],function(){
+      this.populate("products.product");
+  });
+  
 export const cartsModel = mongoose.model(cartsCollection,cartsSchema);
